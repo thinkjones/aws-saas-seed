@@ -1,0 +1,10 @@
+# Build
+build/
+
+# Node
+node_modules/
+jspm_packages/
+
+# IntellIJ
+.idea
+*.iml
