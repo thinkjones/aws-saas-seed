@@ -6,6 +6,26 @@
 * `yarn install`
 * Run build to test 
 
+# Microservices
+## Folder Layout aka MonoRepo
+The Microservices (MS) separates the services in this MonoRepo. In production each MS would be housed in it's 
+own repo. In order to maintain decoupling each folder in MS folder is not allowed to refer to each other.
+
+## Microservices
+Several microservices make up this example application.
+1. auth - Handles authentication via cognito
+2. web - Web app to login to SaaS app.
+3. links - Links processor to CRUD web links.
+4. supergraph - Apollo Super graph to pull apis together.
+
+
+
+
+
+
+
+
+
 # Background
 * Uses typescript seed project from [the blog](https://khalilstemmler.com) and [github](https://github.com/stemmlerjs/simple-typescript-starter)
 
