@@ -1,4 +1,4 @@
-import { Api, Cognito, StackContext, } from "@serverless-stack/resources";
+import { Api, Cognito, Config, StackContext, } from "@serverless-stack/resources";
 
 export function CognitoStack({ stack, app }: StackContext) {
   // Create User Pool
@@ -38,4 +38,21 @@ export function CognitoStack({ stack, app }: StackContext) {
     UserPoolId: auth.userPoolId,
     UserPoolClientId: auth.userPoolClientId,
   });
+
+  // Export Value for other stacks
+  stack.exportValue(api.url, {name: 'ApiEndpoint'})
+  stack.exportValue(auth.userPoolId, {name: 'UserPoolId'})
+  stack.exportValue(auth.userPoolClientId, {name: 'UserPoolClientId'})
+
+  // Write to parameter store
+  new Config.Parameter(stack, "AUTH_API_ENDPOINT", {
+    value: api.url
+  });
+  new Config.Parameter(stack, "AUTH_USER_POOL_ID", {
+    value: auth.userPoolId
+  });
+  new Config.Parameter(stack, "AUTH_USER_POOL_CLIENT_ID", {
+    value: auth.userPoolClientId
+  });
+
 }
