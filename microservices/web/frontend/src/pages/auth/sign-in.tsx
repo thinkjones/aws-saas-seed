@@ -1,11 +1,11 @@
 /* eslint-disable */
 /*!
-  _   _  ___  ____  ___ ________  _   _   _   _ ___   
- | | | |/ _ \|  _ \|_ _|__  / _ \| \ | | | | | |_ _| 
- | |_| | | | | |_) || |  / / | | |  \| | | | | || | 
+  _   _  ___  ____  ___ ________  _   _   _   _ ___
+ | | | |/ _ \|  _ \|_ _|__  / _ \| \ | | | | | |_ _|
+ | |_| | | | | |_) || |  / / | | |  \| | | | | || |
  |  _  | |_| |  _ < | | / /| |_| | |\  | | |_| || |
  |_| |_|\___/|_| \_\___/____\___/|_| \_|  \___/|___|
-                                                                                                                                                                                                                                                                                                                                       
+
 =========================================================
 * Horizon UI - v1.1.0
 =========================================================
@@ -21,7 +21,8 @@
 
 */
 
-import React from 'react';
+import React, { useState } from 'react';
+import { Auth } from "aws-amplify";
 // Chakra imports
 import {
 	Box,
@@ -46,8 +47,13 @@ import Link from 'next/link';
 import { FcGoogle } from 'react-icons/fc';
 import { MdOutlineRemoveRedEye } from 'react-icons/md';
 import { RiEyeCloseLine } from 'react-icons/ri';
+import Router from 'next/router';
 
 export default function SignIn() {
+
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
+
 	// Chakra color mode
 	const textColor = useColorModeValue('navy.700', 'white');
 	const textColorSecondary = 'gray.400';
@@ -120,6 +126,7 @@ export default function SignIn() {
 							Email<Text color={brandStars}>*</Text>
 						</FormLabel>
 						<Input
+							onChange={(e) => setEmail(e.target.value)}
 							isRequired={true}
 							variant='auth'
 							fontSize='sm'
@@ -135,6 +142,7 @@ export default function SignIn() {
 						</FormLabel>
 						<InputGroup size='md'>
 							<Input
+								onChange={(e) => setPassword(e.target.value)}
 								isRequired={true}
 								fontSize='sm'
 								placeholder='Min. 8 characters'
@@ -172,7 +180,14 @@ export default function SignIn() {
 								</a>
 							</Link>
 						</Flex>
-						<Button fontSize='sm' variant='brand' fontWeight='500' w='100%' h='50' mb='24px'>
+						<Button fontSize='sm' variant='brand' fontWeight='500' w='100%' h='50' mb='24px'
+										onClick={() => {
+											Auth.signIn(email, password)
+												.then((user) => {
+													Router.push('/admin/default')
+												})
+												.catch((e) => alert(e));
+										}}>
 							Sign In
 						</Button>
 					</FormControl>

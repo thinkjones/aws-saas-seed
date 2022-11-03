@@ -26,6 +26,8 @@ import { IoMdMoon, IoMdSunny } from 'react-icons/io';
 import { FaEthereum } from 'react-icons/fa';
 import routes from 'routes';
 import { Image } from 'components/image/Image';
+import { Auth, API } from "aws-amplify";
+import Router from 'next/router';
 export default function HeaderLinks(props: { secondary: boolean }) {
 	const { secondary } = props;
 	const { colorMode, toggleColorMode } = useColorMode();
@@ -42,6 +44,13 @@ export default function HeaderLinks(props: { secondary: boolean }) {
 		'14px 17px 40px 4px rgba(112, 144, 176, 0.18)',
 		'14px 17px 40px 4px rgba(112, 144, 176, 0.06)'
 	);
+
+	// Logout the authenticated user
+	const signOut = async () => {
+		await Auth.signOut();
+		Router.push('/auth/sign-in')
+	};
+
 	const borderButton = useColorModeValue('secondaryGray.500', 'whiteAlpha.200');
 	return (
 		<Flex
@@ -209,6 +218,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
 							<Text fontSize='sm'>Newsletter Settings</Text>
 						</MenuItem>
 						<MenuItem
+							onClick={signOut}
 							_hover={{ bg: 'none' }}
 							_focus={{ bg: 'none' }}
 							color='red.400'
