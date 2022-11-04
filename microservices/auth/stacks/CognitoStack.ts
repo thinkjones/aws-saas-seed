@@ -1,4 +1,5 @@
 import { Api, Cognito, Config, StackContext, AppSyncApi, Table } from "@serverless-stack/resources";
+import * as appsync from "@aws-cdk/aws-appsync-alpha";
 
 export function CognitoStack({ stack, app }: StackContext) {
   // Create User Pool
@@ -42,6 +43,18 @@ export function CognitoStack({ stack, app }: StackContext) {
   // Create the AppSync GraphQL API
   const graphQlApi = new AppSyncApi(stack, "AppSyncAuth", {
     schema: "services/graphql/schema.graphql",
+    cdk: {
+      graphqlApi: {
+        authorizationConfig: {
+          defaultAuthorization: {
+            authorizationType: appsync.AuthorizationType.USER_POOL,
+            userPoolConfig: {
+              userPool: auth.cdk.userPool,
+            },
+          },
+        },
+      },
+    },
     defaults: {
       function: {
         bind: [usersTable],
