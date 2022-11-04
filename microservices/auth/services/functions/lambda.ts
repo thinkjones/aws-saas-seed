@@ -10,6 +10,9 @@ type AppSyncEvent = {
     user: User;
     userId: string;
   };
+  identity: {
+    sub: string;
+  }
 };
 
 export async function handler(
@@ -17,7 +20,7 @@ export async function handler(
 ): Promise<Record<string, unknown>[] | User | string | null | undefined> {
   switch (event.info.fieldName) {
     case "getCurrentUser":
-      return await getCurrentUser('jeff');
+      return await getCurrentUser(event.identity.sub);
     case "createUser":
       return await createUser(event.arguments.user);
     default:
