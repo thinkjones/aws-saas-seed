@@ -1,9 +1,19 @@
-import { Api, Cognito, Config, StackContext, } from "@serverless-stack/resources";
+import { Api, Cognito, Config, StackContext, AppSyncApi, Table } from "@serverless-stack/resources";
 
 export function CognitoStack({ stack, app }: StackContext) {
   // Create User Pool
   const auth = new Cognito(stack, "Auth", {
     login: ["email"],
+  });
+
+  // Create a notes table
+  const usersTable = new Table(stack, "Users", {
+    fields: {
+      id: "string",
+      name: "string",
+      email: "string"
+    },
+    primaryIndex: { partitionKey: "id" },
   });
 
   // Create Api
@@ -26,6 +36,23 @@ export function CognitoStack({ stack, app }: StackContext) {
         function: "functions/public.main",
         authorizer: "none",
       },
+    },
+  });
+
+  // Create the AppSync GraphQL API
+  const graphQlApi = new AppSyncApi(stack, "AppSyncAuth", {
+    schema: "services/graphql/schema.graphql",
+    defaults: {
+      function: {
+        bind: [usersTable],
+      },
+    },
+    dataSources: {
+      user: "functions/lambda.handler",
+    },
+    resolvers: {
+      "Query    getCurrentUser": "user",
+      "Mutation createUser": "user",
     },
   });
 

@@ -1,9 +1,26 @@
-import { APIGatewayProxyHandlerV2 } from "aws-lambda";
+import User from "User";
+import createUser from "./createUser";
+import getCurrentUser from "./getCurrentUser";
 
-export const handler: APIGatewayProxyHandlerV2 = async (event) => {
-  return {
-    statusCode: 200,
-    headers: { "Content-Type": "text/plain" },
-    body: `Hello, World! Your request was received at ${event.requestContext.time}.`,
+type AppSyncEvent = {
+  info: {
+    fieldName: string;
+  };
+  arguments: {
+    user: User;
+    userId: string;
   };
 };
+
+export async function handler(
+  event: AppSyncEvent
+): Promise<Record<string, unknown>[] | User | string | null | undefined> {
+  switch (event.info.fieldName) {
+    case "getCurrentUser":
+      return await getCurrentUser('jeff');
+    case "createUser":
+      return await createUser(event.arguments.user);
+    default:
+      return null;
+  }
+}
