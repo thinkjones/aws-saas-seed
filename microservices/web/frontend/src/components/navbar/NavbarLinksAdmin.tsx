@@ -28,6 +28,8 @@ import routes from 'routes';
 import { Image } from 'components/image/Image';
 import { Auth, API } from "aws-amplify";
 import Router from 'next/router';
+import UserInfo from 'components/common/UserInfo';
+import useCurrentUser from 'contexts/useCurrentUser';
 export default function HeaderLinks(props: { secondary: boolean }) {
 	const { secondary } = props;
 	const { colorMode, toggleColorMode } = useColorMode();
@@ -50,6 +52,8 @@ export default function HeaderLinks(props: { secondary: boolean }) {
 		await Auth.signOut();
 		Router.push('/auth/sign-in')
 	};
+
+	const { initials, name } = useCurrentUser()
 
 	const borderButton = useColorModeValue('secondaryGray.500', 'whiteAlpha.200');
 	return (
@@ -188,7 +192,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
 					<Avatar
 						_hover={{ cursor: 'pointer' }}
 						color='white'
-						name='Adela Parkson'
+						name={name}
 						bg='#11047A'
 						size='sm'
 						w='40px'
@@ -207,7 +211,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
 							fontSize='sm'
 							fontWeight='700'
 							color={textColor}>
-							👋&nbsp; Hey, Adela
+							👋&nbsp; Hey, {name}
 						</Text>
 					</Flex>
 					<Flex flexDirection='column' p='10px'>
