@@ -12,7 +12,7 @@ const GET_CURRENT_USER = gql`
 `;
 
 const onlyCapitalLetters = (str: string) => {
-  return str.replace(/[^A-Z]+/g, "");
+  return (str || '').replace(/[^A-Z]+/g, "");
 }
 
 const useCurrentUser = () => {
