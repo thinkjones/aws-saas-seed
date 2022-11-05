@@ -17,6 +17,7 @@
     "prettier-watch:default": "onchange 'src/**/*.ts' -- prettier --write {{changed}}"
   },
   "dependencies": {
+    "@apollo/client": "^3.7.1",
     "@aws-amplify/ui-react": "^3.5.11",
     "@chakra-ui/icons": "^1.1.5",
     "@chakra-ui/react": "1.8.8",
@@ -33,6 +34,7 @@
     "apexcharts": "^3.35.2",
     "aws-amplify": "^4.3.42",
     "framer-motion": "^4.1.17",
+    "graphql": "^16.6.0",
     "next": "^12.2.5",
     "react": "^17.0.2",
     "react-apexcharts": "^1.4.0",

@@ -12,6 +12,8 @@ import 'react-calendar/dist/Calendar.css'
 import 'styles/MiniCalendar.css'
 import Head from 'next/head'
 import AuthGuard from 'contexts/AuthGuard';
+import { ApolloProvider } from "@apollo/client";
+import client from "api/ApolloClient";
 
 function MyApp ({ Component, pageProps }: AppProps) {
 
@@ -20,9 +22,9 @@ function MyApp ({ Component, pageProps }: AppProps) {
     // Amplify
     Amplify.configure({
       Auth: {
-        region: process.env.REGION,
-        userPoolId: process.env.AUTH_USER_POOL_ID,
-        userPoolWebClientId: process.env.AUTH_USER_POOL_CLIENT_ID,
+        region: process.env.NEXT_PUBLIC_REGION,
+        userPoolId: process.env.NEXT_PUBLIC_AUTH_USER_POOL_ID,
+        userPoolWebClientId: process.env.NEXT_PUBLIC_AUTH_USER_POOL_CLIENT_ID,
       },
     });
   }
@@ -35,9 +37,11 @@ function MyApp ({ Component, pageProps }: AppProps) {
         <meta name='theme-color' content='#000000' />
       </Head>
       <React.StrictMode>
-        <AuthGuard>
-          <Component {...pageProps} />
-        </AuthGuard>
+        <ApolloProvider client={client}>
+          <AuthGuard>
+            <Component {...pageProps} />
+          </AuthGuard>
+        </ApolloProvider>
       </React.StrictMode>
     </ChakraProvider>
   )
