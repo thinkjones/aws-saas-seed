@@ -28,7 +28,6 @@ import routes from 'routes';
 import { Image } from 'components/image/Image';
 import { Auth, API } from "aws-amplify";
 import Router from 'next/router';
-import UserInfo from 'components/common/UserInfo';
 import useCurrentUser from 'contexts/useCurrentUser';
 export default function HeaderLinks(props: { secondary: boolean }) {
 	const { secondary } = props;
@@ -53,7 +52,7 @@ export default function HeaderLinks(props: { secondary: boolean }) {
 		Router.push('/auth/sign-in')
 	};
 
-	const { initials, name } = useCurrentUser()
+	const { name } = useCurrentUser()
 
 	const borderButton = useColorModeValue('secondaryGray.500', 'whiteAlpha.200');
 	return (
