@@ -1,0 +1,18 @@
+type Note {
+    userId: String
+    name: String
+    email: String
+}
+
+input NoteInput {
+    userId: String!
+    note: String!
+}
+
+type Query {
+    getNote(userId: String!, dateCreated: String!): Note
+}
+
+type Mutation {
+    createNote(user: NoteInput!): Note
+}
