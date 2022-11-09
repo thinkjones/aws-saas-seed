@@ -1,4 +1,4 @@
-import { AppSyncApi, Cognito, StackContext, Table } from "@serverless-stack/resources";
+import { AppSyncApi, Config, Cognito, StackContext, Table } from "@serverless-stack/resources";
 import * as appsync from "@aws-cdk/aws-appsync-alpha";
 import * as ssm from 'aws-cdk-lib/aws-ssm';
 import { UserPool, UserPoolClient } from 'aws-cdk-lib/aws-cognito';
@@ -62,6 +62,13 @@ export function NotesStack({ stack }: StackContext) {
       "Query    getNote": "note",
       "Mutation createNote": "note",
     },
+  });
+
+  new Config.Parameter(stack, "NOTES_APP_SYNC_API_ID", {
+    value: notesAppSync.apiId
+  });
+  new Config.Parameter(stack, "NOTES_APP_SYNC_API_URL", {
+    value: notesAppSync.url
   });
 
 }
