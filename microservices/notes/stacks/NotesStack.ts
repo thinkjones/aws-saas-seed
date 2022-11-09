@@ -2,6 +2,7 @@ import { AppSyncApi, Cognito, StackContext, Table } from "@serverless-stack/reso
 import * as appsync from "@aws-cdk/aws-appsync-alpha";
 import * as ssm from 'aws-cdk-lib/aws-ssm';
 import { UserPool, UserPoolClient } from 'aws-cdk-lib/aws-cognito';
+import { join, dirname } from 'path';
 
 export function NotesStack({ stack }: StackContext) {
 
@@ -15,6 +16,10 @@ export function NotesStack({ stack }: StackContext) {
       userPoolClient: UserPoolClient.fromUserPoolClientId(stack, "IUserPoolClient", AUTH_USER_POOL_CLIENT_ID),
     },
   });
+
+  // We need to expose the service so we can create the federated GraphQL API.
+  const schemaFile = join(dirname(''), `services/graphql/schema.graphql`);
+  const SCHEMA = appsync.Schema.fromAsset(schemaFile).definition.replace('__typename: String!', '')
 
   // Create a notes table
   const notesTable = new Table(stack, "Notes", {
@@ -44,12 +49,16 @@ export function NotesStack({ stack }: StackContext) {
     defaults: {
       function: {
         bind: [notesTable],
+        environment: {
+          SCHEMA
+        },
       },
     },
     dataSources: {
       note: "functions/lambda.handler",
     },
     resolvers: {
+      "Query    _service": "note",
       "Query    getNote": "note",
       "Mutation createNote": "note",
     },

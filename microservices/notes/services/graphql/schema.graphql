@@ -9,7 +9,12 @@ input NoteInput {
     note: String!
 }
 
+type _Service {
+    sdl: String
+}
+
 type Query {
+    _service: _Service!
     getNote(userId: String!, dateCreated: String!): Note
 }
 
