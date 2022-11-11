@@ -1,11 +1,16 @@
 import { Api, Cognito, Config, StackContext, AppSyncApi, Table } from "@serverless-stack/resources";
 import * as appsync from "@aws-cdk/aws-appsync-alpha";
+import { dirname, join } from 'path';
 
 export function CognitoStack({ stack, app }: StackContext) {
   // Create User Pool
   const auth = new Cognito(stack, "Auth", {
     login: ["email"],
   });
+
+  // We need to expose the service so we can create the federated GraphQL API.
+  const schemaFile = join(dirname(''), `services/graphql/schema.graphql`);
+  const SCHEMA = appsync.Schema.fromAsset(schemaFile).definition.replace('__typename: String!', '')
 
   // Create a notes table
   const usersTable = new Table(stack, "Users", {
@@ -58,12 +63,16 @@ export function CognitoStack({ stack, app }: StackContext) {
     defaults: {
       function: {
         bind: [usersTable],
+        environment: {
+          SCHEMA
+        },
       },
     },
     dataSources: {
       user: "functions/lambda.handler",
     },
     resolvers: {
+      "Query    _service": "user",
       "Query    getCurrentUser": "user",
       "Mutation createUser": "user",
     },

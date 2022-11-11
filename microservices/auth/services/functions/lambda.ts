@@ -17,12 +17,14 @@ type AppSyncEvent = {
 
 export async function handler(
   event: AppSyncEvent
-): Promise<Record<string, unknown>[] | User | string | null | undefined> {
+): Promise<Record<string, unknown>[] | User | string | null | undefined | {sdl: string}> {
   switch (event.info.fieldName) {
     case "getCurrentUser":
       return await getCurrentUser(event.identity.sub);
     case "createUser":
       return await createUser(event.arguments.user);
+    case '_service':
+      return { sdl: process.env.SCHEMA };
     default:
       return null;
   }

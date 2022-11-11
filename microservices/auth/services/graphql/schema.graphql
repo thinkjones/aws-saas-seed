@@ -10,7 +10,12 @@ input UserInput {
     email: String
 }
 
+type _Service {
+    sdl: String
+}
+
 type Query {
+    _service: _Service!
     getCurrentUser: User
 }
 
